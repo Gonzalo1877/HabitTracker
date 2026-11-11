@@ -1,1 +1,4 @@
-﻿Console.WriteLine("Hello, World!");
+﻿using HabitTracker.database;
+
+var database = new DatabaseSQLite();
+database.IniciarDb();
