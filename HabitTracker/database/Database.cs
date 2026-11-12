@@ -24,7 +24,7 @@ public class DatabaseSQLite
                 unit TEXT NOT NULL
             );
         ";
-        
+
         // Crear tabla HabitLogs, si no existe.
         command.CommandText += @"
             CREATE TABLE IF NOT EXISTS habit_logs (
@@ -42,11 +42,5 @@ public class DatabaseSQLite
         {
             Console.WriteLine($"Error al crear las tablas: {ex.Message}");
         } 
-    finally // Si agarra un error, cancela la operacion y cierra la conexion. 
-        {
-            connection.Close();
-        }
-    
     }
-
 }
