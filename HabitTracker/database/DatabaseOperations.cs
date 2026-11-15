@@ -4,7 +4,7 @@ using Microsoft.Data.Sqlite;
     public class DatabaseOperations
     {
         string cs = "Data Source=habittracker.db; Foreign Keys=True";
-
+        
         public void RegistrarHabito(string nombre, string unidad)
         {
 
@@ -99,5 +99,27 @@ using Microsoft.Data.Sqlite;
                     Console.Write("Presione una tecla para continuar. > ");
                     Console.ReadKey();
                 }
+        }
+
+        public void EliminarOcurrencias(int habitId)
+        {
+            var con = new SqliteConnection(cs);
+            con.Open();
+
+            try
+            {
+            using var command = con.CreateCommand();
+            command.CommandText = "DELETE FROM habit_logs WHERE habitId = $habitId";
+
+            command.Parameters.AddWithValue("$habitId", habitId);
+
+            command.ExecuteNonQuery();
+            } 
+            catch (SqliteException ex)
+            {
+                Console.WriteLine($"Error al eliminar el hábito: {ex.Message}.");
+                Console.Write("Presione una tecla para continuar. > ");
+                Console.ReadKey();
+            }
         }
     }

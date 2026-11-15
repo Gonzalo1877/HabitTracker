@@ -20,6 +20,7 @@ public class Menu
         Console.WriteLine("3. Ver hábitos");
         Console.WriteLine("4. Ver ocurrencias de un hábito");
         Console.WriteLine("5. Eliminar hábito");
+        Console.WriteLine("6. Eliminar ocurrencias de habito");
         Console.WriteLine("0. Salir\n");
         Console.Write("> ");
 
@@ -97,6 +98,21 @@ public class Menu
                     else
                     {
                         Console.WriteLine("ID inválido. No se eliminará ningún hábito.");
+                        utils.Pausar();
+                    }
+                break;
+            case 6: 
+                dbOp.MostrarHabitosDisponibles();
+                Console.WriteLine("Ingrese el ID del hábito cuyas ocurrencias desea eliminar: ");
+                id = int.TryParse(Console.ReadLine(), out id) ? id : -1;
+
+                if (id != -1)
+                    {
+                        dbOp.EliminarOcurrencias(id);
+                    } 
+                    else
+                    {
+                        Console.WriteLine("ID inválido. No se eliminarán ocurrencias de ningún hábito.");
                         utils.Pausar();
                     }
                 break;
