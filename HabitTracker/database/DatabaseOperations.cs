@@ -54,6 +54,31 @@ using Microsoft.Data.Sqlite;
             }
         }
 
+        public void MostrarOcurrenciasHabito(int habitId)
+        {
+            var con = new SqliteConnection(cs);
+            con.Open();
+           try 
+           { 
+            using var command = con.CreateCommand();
+            command.CommandText = "SELECT date, quantity FROM habit_logs WHERE habitId = $habitId";
+
+            command.Parameters.AddWithValue("$habitId", habitId);
+
+            using SqliteDataReader rdr = command.ExecuteReader();
+            Console.Clear();
+        
+            while (rdr.Read())
+            {
+            Console.WriteLine("* * *");
+            Console.WriteLine($"Fecha: {rdr.GetString(0)} || Cantidad: {rdr.GetInt32(1)}");
+            }
+            } 
+            catch
+            {
+            
+            }
+       }
         public void EliminarHabito(int habitId)
         {
             var con = new SqliteConnection(cs);
