@@ -2,8 +2,6 @@
 
 # HabitTracker
 
-### Pequeños hábitos, registros que perduran.
-
 Aplicación de consola para registrar hábitos y consultar su historial con C# y SQLite.
 
 [Inicio rápido](#-inicio-rápido) · [Uso](#-cómo-usarlo) · [Base de datos](#-base-de-datos) · [Aprendizaje](#-aprendizaje)
