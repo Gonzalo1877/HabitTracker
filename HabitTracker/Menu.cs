@@ -7,7 +7,7 @@ public class Menu
     {
        bool menuActivo = true;
        int cantidad;
-       int id;
+       int habitId, ocurrenciaId;
        var dbOp = new DatabaseOperations();
        var utils = new Utils();
        DateTime fecha; 
@@ -36,7 +36,7 @@ public class Menu
                 
                 dbOp.MostrarHabitosDisponibles();
                 Console.WriteLine("Ingrese el ID del hábito que desea registrar: ");
-                id = int.TryParse(Console.ReadLine(), out id) ? id : -1;
+                habitId = int.TryParse(Console.ReadLine(), out habitId) ? habitId : -1;
 
                 try
                     {
@@ -54,7 +54,7 @@ public class Menu
                 Console.WriteLine("Ingrese cantidad ");
                 cantidad = int.TryParse(Console.ReadLine(), out cantidad) ? cantidad : 0;
             
-                dbOp.AgregarHabito(fecha,cantidad,id);
+                dbOp.AgregarHabito(fecha,cantidad,habitId);
                 break;
             case 2:
                 string nombre, unidad;
@@ -75,11 +75,11 @@ public class Menu
                 dbOp.MostrarHabitosDisponibles();
                 Console.WriteLine("Ingresa el id del habito que quieres ver las ocurrencias.");
 
-                id = int.TryParse(Console.ReadLine(), out id) ? id : -1;
+                habitId = int.TryParse(Console.ReadLine(), out habitId) ? habitId : -1;
 
-                if (id != -1)
+                if (habitId != -1)
                 {
-                    dbOp.MostrarOcurrenciasHabito(id);
+                    dbOp.MostrarOcurrenciasHabito(habitId);
                 }
                 else
                 {
@@ -91,11 +91,11 @@ public class Menu
             case 5:
                 dbOp.MostrarHabitosDisponibles();
                 Console.WriteLine("Ingrese el ID del hábito que desea eliminar: ");
-                id = int.TryParse(Console.ReadLine(), out id) ? id : -1;
+                habitId = int.TryParse(Console.ReadLine(), out habitId) ? habitId : -1;
 
-                if (id != -1)
+                if (habitId != -1)
                     {
-                        dbOp.EliminarHabito(id);
+                        dbOp.EliminarHabito(habitId);
                     } 
                     else
                     {
@@ -106,11 +106,11 @@ public class Menu
             case 6: 
                 dbOp.MostrarHabitosDisponibles();
                 Console.WriteLine("Ingrese el ID del hábito cuyas ocurrencias desea eliminar: ");
-                id = int.TryParse(Console.ReadLine(), out id) ? id : -1;
+                habitId = int.TryParse(Console.ReadLine(), out habitId) ? habitId : -1;
 
-                if (id != -1)
+                if (habitId != -1)
                     {
-                        dbOp.EliminarOcurrencias(id);
+                        dbOp.EliminarOcurrencias(habitId);
                     } 
                     else
                     {
@@ -121,11 +121,11 @@ public class Menu
             case 7:
                 dbOp.MostrarHabitosDisponibles();
                 Console.WriteLine("Ingrese el ID del hábito cuyas ocurrencias desea editar: ");
-                id = int.TryParse(Console.ReadLine(), out id) ? id : -1;
+                habitId = int.TryParse(Console.ReadLine(), out habitId) ? habitId : -1;
 
-                dbOp.MostrarOcurrenciasHabito(id);
+                dbOp.MostrarOcurrenciasHabito(habitId);
                 Console.WriteLine("Ingrese el ID de la ocurrencia que desea editar: ");
-                id = int.TryParse(Console.ReadLine(), out id) ? id : -1;
+                ocurrenciaId = int.TryParse(Console.ReadLine(), out ocurrenciaId) ? ocurrenciaId : -1;
 
                 Console.WriteLine("Ingrese la nueva fecha (YYYY-MM-DD): ");
                 fecha = DateTime.TryParse(Console.ReadLine(), out fecha) ? fecha : DateTime.Now;
@@ -133,9 +133,9 @@ public class Menu
                 Console.WriteLine("Ingrese la nueva cantidad: ");
                 cantidad = int.TryParse(Console.ReadLine(), out cantidad) ? cantidad : 0;
 
-                if (id != -1)
+                if (ocurrenciaId != -1)
                     {
-                        dbOp.ActualizarOcurrencias(id, fecha, cantidad);
+                        dbOp.ActualizarOcurrencia(ocurrenciaId, fecha, cantidad);
                     } 
                     else
                     {

@@ -126,7 +126,7 @@ using Microsoft.Data.Sqlite;
             }
         }
 
-        public void ActualizarOcurrencias(int habitId, DateTime fecha, int cantidad)
+        public void ActualizarOcurrencia(int ocurrenciaId, DateTime fecha, int cantidad)
         {
             using var con = new SqliteConnection(cs);
             con.Open();
@@ -136,9 +136,9 @@ using Microsoft.Data.Sqlite;
                 using var command = con.CreateCommand();
                 command.CommandText = "UPDATE habit_logs SET date = $date, quantity = $quantity WHERE id = $id";
 
-                command.Parameters.AddWithValue("$date", fecha);
+                command.Parameters.AddWithValue("$date", fecha.ToString("yyyy-MM-dd"));
                 command.Parameters.AddWithValue("$quantity", cantidad);
-                command.Parameters.AddWithValue("$id", habitId);
+                command.Parameters.AddWithValue("$id", ocurrenciaId);
 
                 command.ExecuteNonQuery();
             }
