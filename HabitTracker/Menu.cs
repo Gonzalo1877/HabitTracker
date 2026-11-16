@@ -32,38 +32,21 @@ public class Menu
         switch (opt)
         {
             case 1:
-
-                
                 dbOp.MostrarHabitosDisponibles();
-                Console.WriteLine("Ingrese el ID del hábito que desea registrar: ");
-                habitId = int.TryParse(Console.ReadLine(), out habitId) ? habitId : -1;
 
-                try
-                    {
-                        Console.WriteLine("Ingrese fecha ");
-                        Console.Write("> ");
-                        fecha = DateTime.Parse(Console.ReadLine());
-                    }
-                catch (FormatException)
-                    {
-                        Console.WriteLine("Formato de fecha inválido. Se usará la fecha actual.");
-                        Console.Write("> ");
-                        fecha = DateTime.Now;
-                    }
-                
-                Console.WriteLine("Ingrese cantidad ");
-                cantidad = int.TryParse(Console.ReadLine(), out cantidad) ? cantidad : 0;
-            
+                habitId = utils.LeerPositivo("Ingrese el ID del hábito que desea registrar");
+                if (!dbOp.ValidarId(habitId)) break;
+
+                fecha = utils.LeerFecha("Ingrese fecha (YYYY-MM-DD): ");
+                cantidad = utils.LeerPositivo("Ingrese la cantidad: ");
+
                 dbOp.AgregarHabito(fecha,cantidad,habitId);
                 break;
             case 2:
                 string nombre, unidad;
 
-                Console.Write("Ingrese el nombre del hábito: ");
-                nombre = Console.ReadLine();
-
-                Console.Write("Ingrese el tipo de habito del hábito (medido por unidad, ej: vasos de agua, veces que sali a caminar, etc): ");
-                unidad = Console.ReadLine();
+                nombre = utils.LeerCadena("Ingrese el nombre del hábito");
+                unidad = utils.LeerCadena("Ingrese el tipo de hábito (medido por unidad, ej: vasos de agua, veces que sali a caminar, etc): ");
 
                 dbOp.RegistrarHabito(nombre, unidad);
                 break;
@@ -73,75 +56,45 @@ public class Menu
                 break;
             case 4: 
                 dbOp.MostrarHabitosDisponibles();
-                Console.WriteLine("Ingresa el id del habito que quieres ver las ocurrencias.");
 
-                habitId = int.TryParse(Console.ReadLine(), out habitId) ? habitId : -1;
+                habitId = utils.LeerPositivo("Ingrese el ID del hábito del que desea ver las ocurrencias");
 
-                if (habitId != -1)
-                {
-                    dbOp.MostrarOcurrenciasHabito(habitId);
-                }
-                else
-                {
-                    Console.WriteLine("ID inválido.");
-                }
+                dbOp.MostrarOcurrenciasHabito(habitId);
 
                 utils.Pausar();
                 break;
             case 5:
                 dbOp.MostrarHabitosDisponibles();
-                Console.WriteLine("Ingrese el ID del hábito que desea eliminar: ");
-                habitId = int.TryParse(Console.ReadLine(), out habitId) ? habitId : -1;
 
-                if (habitId != -1)
-                    {
-                        dbOp.EliminarHabito(habitId);
-                    } 
-                    else
-                    {
-                        Console.WriteLine("ID inválido. No se eliminará ningún hábito.");
-                        utils.Pausar();
-                    }
+                habitId = utils.LeerPositivo("Ingrese el ID del hábito que desea eliminar: ");
+                if (!dbOp.ValidarId(habitId)) break;
+
+                dbOp.EliminarHabito(habitId);
+            
                 break;
             case 6: 
                 dbOp.MostrarHabitosDisponibles();
-                Console.WriteLine("Ingrese el ID del hábito cuyas ocurrencias desea eliminar: ");
-                habitId = int.TryParse(Console.ReadLine(), out habitId) ? habitId : -1;
+ 
+                habitId = utils.LeerPositivo("Ingrese el ID del hábito cuyas ocurrencias desea eliminar: ");
+                if (!dbOp.ValidarId(habitId)) break;
 
-                if (habitId != -1)
-                    {
-                        dbOp.EliminarOcurrencias(habitId);
-                    } 
-                    else
-                    {
-                        Console.WriteLine("ID inválido. No se eliminarán ocurrencias de ningún hábito.");
-                        utils.Pausar();
-                    }
+                dbOp.EliminarOcurrencias(habitId);
+             
                 break;
             case 7:
                 dbOp.MostrarHabitosDisponibles();
-                Console.WriteLine("Ingrese el ID del hábito cuyas ocurrencias desea editar: ");
-                habitId = int.TryParse(Console.ReadLine(), out habitId) ? habitId : -1;
+                habitId = utils.LeerPositivo("Ingrese el ID del hábito cuyas ocurrencias desea editar: ");
+                if (!dbOp.ValidarId(habitId)) break;
 
                 dbOp.MostrarOcurrenciasHabito(habitId);
-                Console.WriteLine("Ingrese el ID de la ocurrencia que desea editar: ");
-                ocurrenciaId = int.TryParse(Console.ReadLine(), out ocurrenciaId) ? ocurrenciaId : -1;
+                ocurrenciaId = utils.LeerPositivo("Ingrese el ID de la ocurrencia que desea editar: ");
+                if (!dbOp.ValidarOcurrencia(ocurrenciaId, habitId)) break;
 
-                Console.WriteLine("Ingrese la nueva fecha (YYYY-MM-DD): ");
-                fecha = DateTime.TryParse(Console.ReadLine(), out fecha) ? fecha : DateTime.Now;
+                fecha = utils.LeerFecha("Ingrese la nueva fecha (YYYY-MM-DD): ");
 
-                Console.WriteLine("Ingrese la nueva cantidad: ");
-                cantidad = int.TryParse(Console.ReadLine(), out cantidad) ? cantidad : 0;
+                cantidad = utils.LeerPositivo("Ingrese la nueva cantidad: ");
 
-                if (ocurrenciaId != -1)
-                    {
-                        dbOp.ActualizarOcurrencia(ocurrenciaId, fecha, cantidad);
-                    } 
-                    else
-                    {
-                        Console.WriteLine("ID inválido. No se editarán ocurrencias de ningún hábito.");
-                        utils.Pausar();
-                    }
+                dbOp.ActualizarOcurrencia(ocurrenciaId, fecha, cantidad);
                 break;
             case 0:
                 menuActivo = false; 

@@ -149,4 +149,35 @@ using Microsoft.Data.Sqlite;
                 Console.ReadKey();
             }
         }
+
+        public bool ValidarId(int id)
+        {
+            using var con = new SqliteConnection(cs);
+            con.Open();
+
+            using var command = con.CreateCommand();
+            command.CommandText = "SELECT EXISTS(SELECT 1 FROM habits WHERE id = $habitId)";
+
+            command.Parameters.AddWithValue("$habitId", id);
+
+            bool existe = Convert.ToInt64(command.ExecuteScalar()) == 1;
+
+            return existe;
+        }
+
+        public bool ValidarOcurrencia(int ocurrenciaId, int habitId)
+        {
+            using var con = new SqliteConnection(cs);
+            con.Open();
+
+            using var command = con.CreateCommand();
+            command.CommandText = "SELECT EXISTS(SELECT 1 FROM habits_logs WHERE id = $ocurrenciaId AND habitId = $habitId)";
+
+            command.Parameters.AddWithValue("$ocurrenciaId", ocurrenciaId);
+            command.Parameters.AddWithValue("$habitId", habitId);
+
+            bool existe = Convert.ToInt64(command.ExecuteScalar()) == 1;
+            
+            return existe;
+        }
     }
