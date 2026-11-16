@@ -1,10 +1,10 @@
 namespace HabitTracker.databaseOperations;
 using Microsoft.Data.Sqlite;
+using HabitTracker.utils;
 
     public class DatabaseOperations
     {
         string cs = "Data Source=habittracker.db; Foreign Keys=True";
-        
         public void RegistrarHabito(string nombre, string unidad)
         {
 
@@ -126,7 +126,7 @@ using Microsoft.Data.Sqlite;
             }
         }
 
-        public void ActualizarOcurrencia(int ocurrenciaId, DateTime fecha, int cantidad)
+        public void ActualizarOcurrencia(int ocurrenciaId,  int habitId, DateTime fecha, int cantidad)
         {
             using var con = new SqliteConnection(cs);
             con.Open();
@@ -134,11 +134,12 @@ using Microsoft.Data.Sqlite;
             try
             {
                 using var command = con.CreateCommand();
-                command.CommandText = "UPDATE habit_logs SET date = $date, quantity = $quantity WHERE id = $id";
+                command.CommandText = "UPDATE habit_logs SET date = $date, quantity = $quantity WHERE id = $id AND habitId = $habitId";
 
                 command.Parameters.AddWithValue("$date", fecha.ToString("yyyy-MM-dd"));
                 command.Parameters.AddWithValue("$quantity", cantidad);
                 command.Parameters.AddWithValue("$id", ocurrenciaId);
+                command.Parameters.AddWithValue("$habitId", habitId);
 
                 command.ExecuteNonQuery();
             }
@@ -152,6 +153,7 @@ using Microsoft.Data.Sqlite;
 
         public bool ValidarId(int id)
         {
+            var utils = new Utils();
             using var con = new SqliteConnection(cs);
             con.Open();
 
@@ -162,22 +164,34 @@ using Microsoft.Data.Sqlite;
 
             bool existe = Convert.ToInt64(command.ExecuteScalar()) == 1;
 
+            if (!existe) 
+            {
+                Console.WriteLine("El ID ingresado no existe en la base de datos.");
+                utils.Pausar();
+            }      
             return existe;
         }
 
         public bool ValidarOcurrencia(int ocurrenciaId, int habitId)
         {
+            var utils = new Utils();
             using var con = new SqliteConnection(cs);
             con.Open();
 
             using var command = con.CreateCommand();
-            command.CommandText = "SELECT EXISTS(SELECT 1 FROM habits_logs WHERE id = $ocurrenciaId AND habitId = $habitId)";
+            command.CommandText = "SELECT EXISTS(SELECT 1 FROM habit_logs WHERE id = $ocurrenciaId AND habitId = $habitId)";
 
             command.Parameters.AddWithValue("$ocurrenciaId", ocurrenciaId);
             command.Parameters.AddWithValue("$habitId", habitId);
 
             bool existe = Convert.ToInt64(command.ExecuteScalar()) == 1;
-            
+
+            if (!existe) 
+            {
+                Console.WriteLine("La ocurrencia no existe o no pertenece al hábito especificado.");
+                utils.Pausar();
+            }
+
             return existe;
         }
     }

@@ -58,7 +58,8 @@ public class Menu
                 dbOp.MostrarHabitosDisponibles();
 
                 habitId = utils.LeerPositivo("Ingrese el ID del hábito del que desea ver las ocurrencias");
-
+                if (!dbOp.ValidarId(habitId)) break;    
+                    
                 dbOp.MostrarOcurrenciasHabito(habitId);
 
                 utils.Pausar();
@@ -94,7 +95,7 @@ public class Menu
 
                 cantidad = utils.LeerPositivo("Ingrese la nueva cantidad: ");
 
-                dbOp.ActualizarOcurrencia(ocurrenciaId, fecha, cantidad);
+                dbOp.ActualizarOcurrencia(ocurrenciaId,habitId, fecha, cantidad);
                 break;
             case 0:
                 menuActivo = false; 
