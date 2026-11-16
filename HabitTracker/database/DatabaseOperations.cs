@@ -8,7 +8,7 @@ using Microsoft.Data.Sqlite;
         public void RegistrarHabito(string nombre, string unidad)
         {
 
-        var con = new SqliteConnection(cs);
+        using var con = new SqliteConnection(cs);
         con.Open();
 
         using var command = con.CreateCommand();
@@ -22,7 +22,7 @@ using Microsoft.Data.Sqlite;
 
         public void AgregarHabito(DateTime fecha, int cantidad, int habitId)
         {
-            var con = new SqliteConnection(cs);
+            using var con = new SqliteConnection(cs);
             con.Open();
 
             using var command = con.CreateCommand();
@@ -37,7 +37,7 @@ using Microsoft.Data.Sqlite;
     
         public void MostrarHabitosDisponibles()
         {
-            var con = new SqliteConnection(cs);
+            using var con = new SqliteConnection(cs);
             con.Open();
 
             using var command = con.CreateCommand();
@@ -56,12 +56,13 @@ using Microsoft.Data.Sqlite;
 
         public void MostrarOcurrenciasHabito(int habitId)
         {
-            var con = new SqliteConnection(cs);
+            using var con = new SqliteConnection(cs);
             con.Open();
+
            try 
            { 
             using var command = con.CreateCommand();
-            command.CommandText = "SELECT date, quantity FROM habit_logs WHERE habitId = $habitId";
+            command.CommandText = "SELECT id, date, quantity FROM habit_logs WHERE habitId = $habitId";
 
             command.Parameters.AddWithValue("$habitId", habitId);
 
@@ -71,17 +72,19 @@ using Microsoft.Data.Sqlite;
             while (rdr.Read())
             {
             Console.WriteLine("* * *");
-            Console.WriteLine($"Fecha: {rdr.GetString(0)} || Cantidad: {rdr.GetInt32(1)}");
+            Console.WriteLine($"ID: {rdr.GetInt32(0)} || Fecha: {rdr.GetString(1)} || Cantidad: {rdr.GetInt32(2)}");
             }
             } 
-            catch
+            catch (SqliteException ex)
             {
-            
+                Console.WriteLine($"Error al mostrar las ocurrencias: {ex.Message}.");
+                Console.Write("Presione una tecla para continuar. > ");
+                Console.ReadKey();
             }
        }
         public void EliminarHabito(int habitId)
         {
-            var con = new SqliteConnection(cs);
+            using var con = new SqliteConnection(cs);
             con.Open();
 
             try
@@ -103,7 +106,7 @@ using Microsoft.Data.Sqlite;
 
         public void EliminarOcurrencias(int habitId)
         {
-            var con = new SqliteConnection(cs);
+            using var con = new SqliteConnection(cs);
             con.Open();
 
             try
@@ -118,6 +121,30 @@ using Microsoft.Data.Sqlite;
             catch (SqliteException ex)
             {
                 Console.WriteLine($"Error al eliminar el hábito: {ex.Message}.");
+                Console.Write("Presione una tecla para continuar. > ");
+                Console.ReadKey();
+            }
+        }
+
+        public void ActualizarOcurrencias(int habitId, DateTime fecha, int cantidad)
+        {
+            using var con = new SqliteConnection(cs);
+            con.Open();
+
+            try
+            {
+                using var command = con.CreateCommand();
+                command.CommandText = "UPDATE habit_logs SET date = $date, quantity = $quantity WHERE id = $id";
+
+                command.Parameters.AddWithValue("$date", fecha);
+                command.Parameters.AddWithValue("$quantity", cantidad);
+                command.Parameters.AddWithValue("$id", habitId);
+
+                command.ExecuteNonQuery();
+            }
+            catch (SqliteException ex)
+            {
+                Console.WriteLine($"Error al actualizar las ocurrencias: {ex.Message}.");
                 Console.Write("Presione una tecla para continuar. > ");
                 Console.ReadKey();
             }
